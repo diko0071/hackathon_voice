@@ -1,4 +1,4 @@
-frontend.enableClientVersionCheck:
+atfrontend.enableClientVersionCheck:
   - value: true
 history.defaultWorkflowExecutionTimeout:
   - value: 24h
