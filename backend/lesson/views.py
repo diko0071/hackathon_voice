@@ -1,32 +1,52 @@
-from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from temporalio.client import Client
 import asyncio
 import os
-from workflows.collect_info import RandomPrinterWorkflow
+from .services import search_content
+from rest_framework.response import Response
+import json
+from django.http import JsonResponse
+from workflows.collect_info_workflow import CollectInfoWorkflow
 
 @api_view(["POST"])
 @permission_classes([])
 @authentication_classes([])
-def run_workflow(request):
-    async def start_workflow():
-        client = await Client.connect(os.getenv("TEMPORAL_SERVER_URL"))
-        
-        handle = await client.start_workflow(
-            RandomPrinterWorkflow.run,
-            id=f"random-printer-{os.urandom(4).hex()}",
-            task_queue=os.getenv("TEMPORAL_TASK_QUEUE")
-        )
-        
-        return handle.id
-    
-    workflow_id = asyncio.run(start_workflow())
-    
-    return JsonResponse({
-        "status": "success",
-        "workflow_id": workflow_id,
-        "message": "Workflow started successfully"
-    })
+def search_lesson_content(request):
+    query = request.data.get("query")
+    result = search_content(query)
+    return JsonResponse(result, json_dumps_params={'indent': 2})
 
+@api_view(["POST"])
+@permission_classes([])
+@authentication_classes([])
+def start_collect_info_workflow(request):
+    try:
+        title = request.data.get("title")
+        description = request.data.get("description")
+        
+        if not title or not description:
+            return JsonResponse({
+                "error": "Both title and description are required"
+            }, status=400)
 
+        async def start_workflow():
+            client = await Client.connect(os.getenv("TEMPORAL_HOST"))
+            return await client.start_workflow(
+                CollectInfoWorkflow.run,
+                args=[title, description],
+                id=f"collect-info-{title[:30]}-{os.urandom(4).hex()}",
+                task_queue=os.getenv("TEMPORAL_TASK_QUEUE")
+            )
+
+        handle = asyncio.run(start_workflow())
+        
+        return JsonResponse({
+            "status": "workflow_started",
+            "workflow_id": handle.id
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            "error": str(e)
+        }, status=500)
 

@@ -1,11 +1,8 @@
 import asyncio
 from temporalio.client import Client
 from temporalio.worker import Worker
-from workflows.collect_info import (
-    RandomPrinterWorkflow,
-    generate_random_text,
-    generate_random_number
-)
+from workflows.collect_info_workflow import CollectInfoWorkflow
+from workflows.scrappers import generate_queries, scrape_content
 import os
 from dotenv import load_dotenv
 
@@ -23,8 +20,8 @@ async def run_worker():
     worker = Worker(
         client,
         task_queue=os.getenv("TEMPORAL_TASK_QUEUE"),
-        workflows=[RandomPrinterWorkflow],
-        activities=[generate_random_text, generate_random_number]
+        workflows=[CollectInfoWorkflow],
+        activities=[generate_queries, scrape_content]
     )
 
     print(f"Starting worker, connecting to task queue: {os.getenv('TEMPORAL_TASK_QUEUE')}")
@@ -32,3 +29,5 @@ async def run_worker():
 
 if __name__ == "__main__":
     asyncio.run(run_worker())
+
+    
