@@ -37,6 +37,7 @@
             # PostgreSQL dependencies
             pkgs.postgresql
             pkgs.pkg-config
+            pkgs.pnpm
             # Pillow dependencies
             pkgs.docker-compose
             pkgs.libjpeg
