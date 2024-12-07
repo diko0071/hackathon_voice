@@ -22,7 +22,6 @@ class CollectInfoWorkflow:
 
         # put results into mongodb
         client = pymongo.MongoClient("mongodb://localhost:27017/")
-        client["tavily_results"].insert_many(results)
+        client[f"{title}_{description}"].insert_many(results)
 
         return results
-
