@@ -1,15 +1,13 @@
-from backend.lesson.models import Lesson
+from .models import Lesson
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from .models import Lesson
 from .serializers import LessonSerializer
 from temporalio.client import Client
 import asyncio
 import os
 from .services import search_content
-from rest_framework.response import Response
 import json
 from django.http import JsonResponse
 from workflows.collect_info_workflow import CollectInfoWorkflow

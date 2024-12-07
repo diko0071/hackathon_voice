@@ -3,7 +3,8 @@
 import ReactMarkdown from 'react-markdown'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { TeacherAvatar } from './avatar'
-import { LessonSection } from '../types'
+import { LessonSection } from '@/app/types'
+
 
 interface ReadMaterialsProps {
   section: LessonSection
