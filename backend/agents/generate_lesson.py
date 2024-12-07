@@ -21,6 +21,18 @@ captain_agent = CaptainAgent(
 )
 captain_user_proxy = UserProxyAgent(name="captain_user_proxy", human_input_mode="NEVER")
 
-query = "find papers on LLM applications from arxiv in the last week, create a markdown table of different domains. After collecting the data, point out future research directions in light of the collected data."
+topic = "Machine Learning"
+timeframe = "2020-2022"
 
-result = captain_user_proxy.initiate_chat(captain_agent, message=query)
+#from arxiv
+
+query = f"find papers on {topic} in the timeframe {timeframe}, create a markdown table of different domains. After collecting the data, organize it into 4 markdown tables. Each table represents a lecture which is composed of sections, each section should have a lesson material and quiz section. Make sure to clearly annotate correct answers for the quizzes."
+
+
+def run():
+    return captain_user_proxy.initiate_chat(captain_agent, message=query)
+
+
+if __name__ == "__main__":
+    print(run())
+
