@@ -1,0 +1,6 @@
+frontend.enableClientVersionCheck:
+  - value: true
+history.defaultWorkflowExecutionTimeout:
+  - value: 24h
+system.enableReadVisibilityFromES:
+  - value: false
