@@ -302,6 +302,12 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@openai/realtime-api-beta@openai/openai-realtime-api-beta":
+  version "0.0.0"
+  resolved "https://codeload.github.com/openai/openai-realtime-api-beta/tar.gz/a5cb94824f625423858ebacb9f769226ca98945f"
+  dependencies:
+    ws "^8.18.0"
+
 "@opentelemetry/api-logs@0.52.1":
   version "0.52.1"
   resolved "https://registry.npmjs.org/@opentelemetry/api-logs/-/api-logs-0.52.1.tgz"
@@ -3726,6 +3732,11 @@ signal-exit@^4.0.1:
   resolved "https://registry.npmjs.org/signal-exit/-/signal-exit-4.1.0.tgz"
   integrity sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==
 
+simli-client@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/simli-client/-/simli-client-1.2.1.tgz#438ae5f7014813c12f8168e47d6b810ea42056bb"
+  integrity sha512-1fUK6Ul6fCeAyjcctAxK44pvMNUyG0Mkf0JDR5E7aaUTnaovMpD/irG5teU+DpqSPYJxaBAgEdNB/DAeUPoEKQ==
+
 sonner@^1.5.0:
   version "1.5.0"
   resolved "https://registry.npmjs.org/sonner/-/sonner-1.5.0.tgz"
@@ -4236,6 +4247,11 @@ wrappy@1:
   version "1.0.2"
   resolved "https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz"
   integrity sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==
+
+ws@^8.18.0:
+  version "8.18.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.18.0.tgz#0d7505a6eafe2b0e712d232b42279f53bc289bbc"
+  integrity sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==
 
 xtend@^4.0.0:
   version "4.0.2"
