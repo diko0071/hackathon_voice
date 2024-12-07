@@ -3,6 +3,7 @@
 import { ChevronRight } from 'lucide-react'
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { TeacherAvatar } from './avatar'
 
 interface SectionProps {
   title: string;
@@ -20,8 +21,8 @@ function Section({ title, children }: SectionProps) {
 
 export function ReadMaterials() {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="lg:col-span-2">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="lg:col-span-3">
         <ScrollArea className="h-[calc(100vh-200px)] pr-4">
           <h2 className="text-2xl font-bold mb-6">React Fundamentals</h2>
           <div className="space-y-6">
@@ -113,24 +114,7 @@ function Greeting(props) {
         </ScrollArea>
       </div>
       <div className="lg:col-span-1">
-        <h3 className="font-medium mb-4">Table of Contents</h3>
-        <ScrollArea className="h-[calc(100vh-200px)]">
-          {[
-            "1. Introduction to React",
-            "2. Components and Props",
-            "3. State and Lifecycle",
-            "4. Handling Events",
-            "5. Conditional Rendering",
-          ].map((section, index) => (
-            <div key={index} className="group">
-              <div className="flex items-center gap-3 p-3 hover:bg-muted rounded-lg cursor-pointer">
-                <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
-                <span className="text-sm">{section}</span>
-              </div>
-              {index < 4 && <Separator className="my-1" />}
-            </div>
-          ))}
-        </ScrollArea>
+        <TeacherAvatar />
       </div>
     </div>
   )
