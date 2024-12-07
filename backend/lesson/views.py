@@ -1,3 +1,4 @@
+from backend.lesson.models import Lesson
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import AllowAny
@@ -30,18 +31,11 @@ class LessonViewSet(viewsets.ReadOnlyModelViewSet):
 @api_view(["POST"])
 @permission_classes([])
 @authentication_classes([])
-def search_lesson_content(request):
-    query = request.data.get("query")
-    result = search_content(query)
-    return JsonResponse(result, json_dumps_params={'indent': 2})
-
-@api_view(["POST"])
-@permission_classes([])
-@authentication_classes([])
 def start_collect_info_workflow(request):
     try:
         title = request.data.get("title")
         description = request.data.get("description")
+        avatar_face_id = request.data.get("avatar_face_id")
         
         if not title or not description:
             return JsonResponse({
@@ -52,7 +46,7 @@ def start_collect_info_workflow(request):
             client = await Client.connect(os.getenv("TEMPORAL_HOST"))
             return await client.start_workflow(
                 CollectInfoWorkflow.run,
-                args=[title, description],
+                args=[title, description, avatar_face_id],
                 id=f"collect-info-{title[:30]}-{os.urandom(4).hex()}",
                 task_queue=os.getenv("TEMPORAL_TASK_QUEUE")
             )
@@ -68,4 +62,3 @@ def start_collect_info_workflow(request):
         return JsonResponse({
             "error": str(e)
         }, status=500)
-
