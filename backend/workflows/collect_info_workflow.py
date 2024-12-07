@@ -1,6 +1,8 @@
 from temporalio import workflow
 from datetime import timedelta
 from typing import List, Dict
+import pymongo
+
 
 @workflow.defn
 class CollectInfoWorkflow:
@@ -9,13 +11,13 @@ class CollectInfoWorkflow:
         queries = await workflow.execute_activity(
             "generate_queries",
             args=[title, description],
-            start_to_close_timeout=timedelta(minutes=2)
+            start_to_close_timeout=timedelta(minutes=2),
         )
-        
+
         results = await workflow.execute_activity(
             "scrape_content",
             args=[queries],
-            start_to_close_timeout=timedelta(minutes=5)
+            start_to_close_timeout=timedelta(minutes=5),
         )
 
         lesson_content = await workflow.execute_activity(
@@ -42,3 +44,5 @@ class CollectInfoWorkflow:
             "quiz_questions": quiz_questions,
             "saved_ids": saved_content
         }
+
+        return results

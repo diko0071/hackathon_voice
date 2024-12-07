@@ -4,26 +4,14 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { TeacherAvatar } from './avatar'
+import { Quiz } from "@/app/types"
 
-export function DoQuiz() {
+export function DoQuiz({ quiz }: { quiz: Quiz }) {
   const [quizState, setQuizState] = useState<'not-started' | 'in-progress' | 'completed'>('not-started')
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [userAnswers, setUserAnswers] = useState<number[]>([])
 
-  const questions = [
-    {
-      question: "What is React primarily used for?",
-      options: [
-        "Building user interfaces",
-        "Database management",
-        "Server configuration",
-        "Network protocols"
-      ],
-      correctAnswer: 0
-    },
-    // Add more questions as needed
-    
-  ]
+  const questions = quiz.questions
 
   const startQuiz = () => {
     setQuizState('in-progress')
@@ -33,18 +21,18 @@ export function DoQuiz() {
 
   const calculateScore = () => {
     return userAnswers.reduce((score, answer, index) => {
-      return score + (answer === questions[index].correctAnswer ? 1 : 0)
+      return score + (questions[index].options[answer].is_correct ? 1 : 0)
     }, 0)
   }
 
   if (quizState === 'not-started') {
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-8">
         <div className="lg:col-span-3">
           <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)]">
             <h2 className="text-2xl font-bold mb-4">Ready to Test Your Knowledge?</h2>
             <p className="text-muted-foreground mb-8 text-center max-w-md">
-              This quiz will test your understanding of React fundamentals. Take your time and answer carefully!
+              This quiz will test your understanding of {quiz.title}. Take your time and answer carefully!
             </p>
             <Button onClick={startQuiz}>Start Quiz</Button>
           </div>
@@ -74,7 +62,7 @@ export function DoQuiz() {
               <div className="space-y-2">
                 {question.options.map((option, index) => (
                   <Button
-                    key={index}
+                    key={option.id}
                     variant="outline"
                     className="w-full justify-start text-left h-auto p-4"
                     onClick={() => {
@@ -88,7 +76,7 @@ export function DoQuiz() {
                       }
                     }}
                   >
-                    {option}
+                    {option.content}
                   </Button>
                 ))}
               </div>
