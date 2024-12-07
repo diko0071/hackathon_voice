@@ -22,7 +22,7 @@ export function ReadMaterials({ section }: ReadMaterialsProps) {
         </ScrollArea>
       </div>
       <div className="lg:col-span-1">
-        <TeacherAvatar />
+        <TeacherAvatar lesson={section.content} />
       </div>
     </div>
   )
