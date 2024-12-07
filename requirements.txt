@@ -24,15 +24,4 @@ pillow==9.5.0
 gunicorn==20.1.0
 django-temporalio==1.1.0
 tavily-python==0.5.0
-ag2[captainagent]==0.5.0
 pymongo==4.10.1
-markdownify
-arxiv
-pymupdf
-wikipedia-api
-easyocr
-python-pptx
-openai-whisper
-pandas
-scipy
-sentence-transformers
