@@ -9,7 +9,7 @@ class Lesson(models.Model):
 
 class LessonSection(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='sections')
-    title = models.CharField(max_length=200, default="Untitled")  # Add a default value
+    title = models.CharField(max_length=200, default="Untitled") 
     content = models.TextField(null=True, blank=True)
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

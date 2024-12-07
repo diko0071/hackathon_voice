@@ -1,12 +1,18 @@
+import os
+import django
+from dotenv import load_dotenv
+
+load_dotenv()
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
+django.setup()
+
 import asyncio
 from temporalio.client import Client
 from temporalio.worker import Worker
 from workflows.collect_info_workflow import CollectInfoWorkflow
 from workflows.scrappers import generate_queries, scrape_content
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
+from workflows.generate_agent import generate_lesson_content, generate_quiz_questions, save_lesson_content
 
 async def run_worker():
     while True:
@@ -21,7 +27,7 @@ async def run_worker():
         client,
         task_queue=os.getenv("TEMPORAL_TASK_QUEUE"),
         workflows=[CollectInfoWorkflow],
-        activities=[generate_queries, scrape_content]
+        activities=[generate_queries, scrape_content, generate_lesson_content, generate_quiz_questions, save_lesson_content]
     )
 
     print(f"Starting worker, connecting to task queue: {os.getenv('TEMPORAL_TASK_QUEUE')}")
