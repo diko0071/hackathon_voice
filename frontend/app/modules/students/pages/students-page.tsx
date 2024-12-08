@@ -82,7 +82,7 @@ export default function StudentWizardFlow({ lectureId }: { lectureId: string }) 
             {currentStep < lesson.sections.length ? (
               <ReadMaterials lesson={lesson} section={lesson.sections[currentStep]} />
             ) : (
-              <DoQuiz quiz={lesson.quizzes[0]} />
+              <DoQuiz lesson={lesson} quiz={lesson.quizzes[0]} />
             )}
           </div>
           <div className="flex justify-between mt-8">

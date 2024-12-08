@@ -4,9 +4,9 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Avatar } from './avatar'
-import { Quiz } from "@/app/types"
+import { Lesson, Quiz } from "@/app/types"
 
-export function DoQuiz({ quiz }: { quiz: Quiz }) {
+export function DoQuiz({ lesson, quiz }: { lesson: Lesson, quiz: Quiz }) {
   const [quizState, setQuizState] = useState<'not-started' | 'in-progress' | 'completed'>('not-started')
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [userAnswers, setUserAnswers] = useState<number[]>([])
@@ -38,7 +38,7 @@ export function DoQuiz({ quiz }: { quiz: Quiz }) {
           </div>
         </div>
         <div className="lg:col-span-1">
-          <Avatar/>
+          <Avatar lesson={lesson}/>
         </div>
       </div>
     )
@@ -84,7 +84,7 @@ export function DoQuiz({ quiz }: { quiz: Quiz }) {
           </div>
         </div>
         <div className="lg:col-span-1">
-          <Avatar/>
+          <Avatar lesson={lesson}/>
         </div>
       </div>
     )
@@ -110,7 +110,7 @@ export function DoQuiz({ quiz }: { quiz: Quiz }) {
           </div>
         </div>
         <div className="lg:col-span-1">
-        <Avatar/>
+          <Avatar lesson={lesson}/> 
         </div>
       </div>
     )
