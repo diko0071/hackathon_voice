@@ -1,7 +1,6 @@
 from temporalio import workflow
 from datetime import timedelta
-from typing import List, Dict
-import pymongo
+from typing import Dict
 
 
 @workflow.defn

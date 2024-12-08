@@ -4,6 +4,7 @@ class Lesson(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     avatar_face_id = models.CharField(max_length=255, null=True, blank=True)
+    initial_prompt = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

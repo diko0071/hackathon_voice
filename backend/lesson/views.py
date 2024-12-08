@@ -33,7 +33,7 @@ def start_collect_info_workflow(request):
     try:
         title = request.data.get("title")
         description = request.data.get("description")
-        avatar_face_id = '0c2b8b04-5274-41f1-a21c-d5c98322efa9'
+        avatar_face_id = request.data.get("avatar_face_id")
         
         if not title or not description:
             return JsonResponse({
@@ -60,5 +60,4 @@ def start_collect_info_workflow(request):
         return JsonResponse({
             "error": str(e)
         }, status=500)
-    
     

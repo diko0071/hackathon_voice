@@ -18,6 +18,7 @@ import { useState } from "react"
 const formSchema = z.object({
   lessonName: z.string().min(1, "Lesson name is required"),
   description: z.string().min(1, "Description is required"),
+  avatarFaceId: z.string().optional(),
   // Additional fields for UI only
   infoSources: z.array(z.string()).optional(),
   historicalCharacter: z.string().optional(),
@@ -35,7 +36,8 @@ const characterOptions = [
   { value: "einstein", label: "Albert Einstein" },
   { value: "curie", label: "Marie Curie" },
   { value: "newton", label: "Isaac Newton" },
-  { value: "napoleon", label: "Napoleon Bonaparte" },
+  { value: "napoleon", label: "Napoleon Bonaparte", avatarFaceId: "ba83c375-3720-44b8-a842-b0d188ecd099" },
+  { value: "tesla", label: "Nikola Tesla", avatarFaceId: "95708b15-bcb8-4d40-a4c5-b233778858b4" },
 ]
 
 export default function LessonGeneratorForm() {
@@ -49,6 +51,7 @@ export default function LessonGeneratorForm() {
     defaultValues: {
       lessonName: "",
       description: "",
+      avatarFaceId: "",
       infoSources: [],
       historicalCharacter: "",
       quizQuestionCount: "5",
@@ -58,9 +61,11 @@ export default function LessonGeneratorForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      const selectedCharacter = characterOptions.find(c => c.value === values.historicalCharacter);
       const response = await lessonApi.startWorkflow({
         title: values.lessonName,
         description: values.description,
+        avatarFaceId: values.avatarFaceId || selectedCharacter?.avatarFaceId
       })
       setAlert({
         type: 'success',

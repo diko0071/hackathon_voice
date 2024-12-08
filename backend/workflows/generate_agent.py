@@ -1,8 +1,8 @@
 from temporalio import activity
 from typing import List, Dict
 from lesson.services import openai_call
-from lesson.prompts import generate_lesson_plan_prompt
-from lesson.serializers import LessonSerializer, QuizSerializer
+from lesson.prompts import generate_lesson_plan_prompt, napoleon_prompt, tesla_prompt
+from lesson.serializers import LessonSerializer, LessonSerializerOpenAI, QuizSerializerOpenAI
 from lesson.models import Lesson, LessonSection, Quiz, QuizQuestion, QuizQuestionOption
 from asgiref.sync import sync_to_async
 
@@ -17,7 +17,7 @@ async def generate_lesson_content(title: str, topic: str, description: str, avat
     Avatar Face ID: {avatar_face_id}
     """
 
-    response = await openai_call(system_message, user_message, serializer=LessonSerializer)
+    response = await openai_call(system_message, user_message, serializer=LessonSerializerOpenAI)
 
     return response
 
@@ -32,7 +32,7 @@ async def generate_quiz_questions(title: str, topic: str, description: str) -> D
     Description: {description}
     """
 
-    response = await openai_call(system_message, user_message, serializer=QuizSerializer)
+    response = await openai_call(system_message, user_message, serializer=QuizSerializerOpenAI)
 
     return response
 
@@ -42,10 +42,16 @@ async def save_lesson_content(lesson_data: Dict, quiz_data: Dict) -> Dict:
     
     @sync_to_async
     def create_lesson():
+        if lesson_data['avatar_face_id'] == "ba83c375-3720-44b8-a842-b0d188ecd099":
+            initial_prompt = napoleon_prompt
+        elif lesson_data['avatar_face_id'] == "95708b15-bcb8-4d40-a4c5-b233778858b4":
+            initial_prompt = tesla_prompt
+
         lesson = Lesson.objects.create(
             name=lesson_data['name'],
             description=lesson_data.get('description'),
-            avatar_face_id=lesson_data.get('avatar_face_id')
+            avatar_face_id=lesson_data.get('avatar_face_id'),
+            initial_prompt=initial_prompt
         )
         
         for section in lesson_data['sections']:
@@ -84,4 +90,3 @@ async def save_lesson_content(lesson_data: Dict, quiz_data: Dict) -> Dict:
         "lesson_id": lesson_id,
         "quiz_id": quiz_id
     }
-
