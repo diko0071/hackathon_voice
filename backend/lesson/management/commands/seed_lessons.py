@@ -13,7 +13,7 @@ class Command(BaseCommand):
             {
                 'name': 'The French Revolution',
                 'description': 'Explore the dramatic events that transformed France and shaped modern Europe',
-                'avatar_face_id': 'historian_teacher',
+                'avatar_face_id': 'ba83c375-3720-44b8-a842-b0d188ecd099',
                 'sections': [
                     {
                         'title': 'Causes of the Revolution',

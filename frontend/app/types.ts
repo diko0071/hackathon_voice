@@ -30,6 +30,7 @@ export interface QuizOption {
     name: string;
     description: string | null;
     avatar_face_id: string | null;
+    initial_prompt: string | null;
     sections: LessonSection[];
     quizzes: Quiz[];
   }
