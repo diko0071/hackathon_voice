@@ -10,6 +10,12 @@ export function DoQuiz({ quiz }: { quiz: Quiz }) {
   const [quizState, setQuizState] = useState<'not-started' | 'in-progress' | 'completed'>('not-started')
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [userAnswers, setUserAnswers] = useState<number[]>([])
+  const [shouldActivateTeacher, setShouldActivateTeacher] = useState(false)
+  const [questionContext, setQuestionContext] = useState<{
+    question: string;
+    wrongAnswer: string;
+    correctAnswer: string;
+  } | null>(null);
 
   const questions = quiz.questions
 
@@ -24,6 +30,32 @@ export function DoQuiz({ quiz }: { quiz: Quiz }) {
       return score + (questions[index].options[answer].is_correct ? 1 : 0)
     }, 0)
   }
+
+  const handleAnswer = (option: any, index: number) => {
+    const newAnswers = [...userAnswers, index];
+    setUserAnswers(newAnswers);
+    
+    if (!option.is_correct) {
+      const correctOption = questions[currentQuestion].options.find(opt => opt.is_correct);
+      setQuestionContext({
+        question: questions[currentQuestion].question,
+        wrongAnswer: option.content,
+        correctAnswer: correctOption?.content || '',
+      });
+      setShouldActivateTeacher(true);
+    } else {
+      setShouldActivateTeacher(false);
+      setQuestionContext(null);
+    }
+    
+    setTimeout(() => {
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(currentQuestion + 1);
+      } else {
+        setQuizState('completed');
+      }
+    }, 2000);
+  };
 
   if (quizState === 'not-started') {
     return (
@@ -65,16 +97,7 @@ export function DoQuiz({ quiz }: { quiz: Quiz }) {
                     key={option.id}
                     variant="outline"
                     className="w-full justify-start text-left h-auto p-4"
-                    onClick={() => {
-                      const newAnswers = [...userAnswers, index]
-                      setUserAnswers(newAnswers)
-                      
-                      if (currentQuestion < questions.length - 1) {
-                        setCurrentQuestion(currentQuestion + 1)
-                      } else {
-                        setQuizState('completed')
-                      }
-                    }}
+                    onClick={() => handleAnswer(option, index)}
                   >
                     {option.content}
                   </Button>
@@ -84,7 +107,10 @@ export function DoQuiz({ quiz }: { quiz: Quiz }) {
           </div>
         </div>
         <div className="lg:col-span-1">
-          <TeacherAvatar />
+          <TeacherAvatar 
+            shouldActivate={shouldActivateTeacher} 
+            questionContext={questionContext}
+          />
         </div>
       </div>
     )

@@ -304,7 +304,7 @@
 
 "@openai/realtime-api-beta@openai/openai-realtime-api-beta":
   version "0.0.0"
-  resolved "https://codeload.github.com/openai/openai-realtime-api-beta/tar.gz/a5cb94824f625423858ebacb9f769226ca98945f"
+  resolved "git+ssh://git@github.com/openai/openai-realtime-api-beta.git#a5cb94824f625423858ebacb9f769226ca98945f"
   dependencies:
     ws "^8.18.0"
 
@@ -3734,7 +3734,7 @@ signal-exit@^4.0.1:
 
 simli-client@^1.2.1:
   version "1.2.1"
-  resolved "https://registry.yarnpkg.com/simli-client/-/simli-client-1.2.1.tgz#438ae5f7014813c12f8168e47d6b810ea42056bb"
+  resolved "https://registry.npmjs.org/simli-client/-/simli-client-1.2.1.tgz"
   integrity sha512-1fUK6Ul6fCeAyjcctAxK44pvMNUyG0Mkf0JDR5E7aaUTnaovMpD/irG5teU+DpqSPYJxaBAgEdNB/DAeUPoEKQ==
 
 sonner@^1.5.0:
@@ -4250,7 +4250,7 @@ wrappy@1:
 
 ws@^8.18.0:
   version "8.18.0"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.18.0.tgz#0d7505a6eafe2b0e712d232b42279f53bc289bbc"
+  resolved "https://registry.npmjs.org/ws/-/ws-8.18.0.tgz"
   integrity sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==
 
 xtend@^4.0.0:

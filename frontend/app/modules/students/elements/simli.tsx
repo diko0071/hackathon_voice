@@ -8,11 +8,17 @@ import { cn } from "@/app/lib/utils";
 
 interface SimliOpenAIProps {
   simli_faceid: string;
-  openai_voice: "echo" | "alloy" | "shimmer";
+  openai_voice: 'alloy' | 'echo' | 'nova' | 'shimmer';
   initialPrompt: string;
   onStart: () => void;
   onClose: () => void;
   showDottedFace: boolean;
+  autoStart?: boolean;
+  questionContext?: {
+    question: string;
+    wrongAnswer: string;
+    correctAnswer: string;
+  } | null;
 }
 
 const simliClient = new SimliClient();
@@ -24,6 +30,8 @@ const SimliOpenAI: React.FC<SimliOpenAIProps> = ({
   onStart,
   onClose,
   showDottedFace,
+  autoStart,
+  questionContext,
 }) => {
   // State management
   const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +52,9 @@ const SimliOpenAI: React.FC<SimliOpenAIProps> = ({
   // New refs for managing audio chunk delay
   const audioChunkQueueRef = useRef<Int16Array[]>([]);
   const isProcessingChunkRef = useRef(false);
+
+  // Add a ref to track if we're currently processing a response
+  const isProcessingResponseRef = useRef(false);
 
   /**
    * Initializes the Simli client with the provided configuration.
@@ -78,7 +89,7 @@ const SimliOpenAI: React.FC<SimliOpenAIProps> = ({
 
       await openAIClientRef.current.updateSession({
         instructions: initialPrompt,
-        voice: openai_voice,
+        voice: openai_voice as any,
         turn_detection: { type: "server_vad" },
         input_audio_transcription: { model: "whisper-1" },
       });
@@ -110,7 +121,7 @@ const SimliOpenAI: React.FC<SimliOpenAIProps> = ({
       console.error("Error initializing OpenAI client:", error);
       setError(`Failed to initialize OpenAI client: ${error.message}`);
     }
-  }, [initialPrompt]);
+  }, [initialPrompt, openai_voice]);
 
   /**
    * Handles conversation updates, including user and assistant messages.
@@ -119,17 +130,20 @@ const SimliOpenAI: React.FC<SimliOpenAIProps> = ({
     console.log("Conversation updated:", event);
     const { item, delta } = event;
 
-    if (item.type === "message" && item.role === "assistant") {
-      console.log("Assistant message detected");
-      if (delta && delta.audio) {
-        const downsampledAudio = downsampleAudio(delta.audio, 24000, 16000);
-        audioChunkQueueRef.current.push(downsampledAudio);
-        if (!isProcessingChunkRef.current) {
-          processNextAudioChunk();
+    if (item.type === "message") {
+      if (item.role === "assistant") {
+        if (delta?.audio) {
+          console.log("Received audio chunk from assistant");
+          const audioData = new Int16Array(delta.audio);
+          simliClient?.sendAudioData(audioData as any);
+          console.log("Sent audio chunk to Simli");
         }
+        if (delta?.content) {
+          console.log("Assistant message content:", delta.content);
+        }
+      } else if (item.role === "user") {
+        setUserMessage(item.content[0].transcript);
       }
-    } else if (item.type === "message" && item.role === "user") {
-      setUserMessage(item.content[0].transcript);
     }
   }, []);
 
@@ -281,7 +295,7 @@ const SimliOpenAI: React.FC<SimliOpenAIProps> = ({
    */
   const startRecording = useCallback(async () => {
     if (!audioContextRef.current) {
-      audioContextRef.current = new AudioContext({ sampleRate: 24000 });
+      audioContextRef.current = new AudioContext({ sampleRate: 16000 });
     }
 
     try {
@@ -403,6 +417,46 @@ const SimliOpenAI: React.FC<SimliOpenAIProps> = ({
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (autoStart && !isAvatarVisible) {
+      handleStart();
+    }
+  }, [autoStart, handleStart, isAvatarVisible]);
+
+  useEffect(() => {
+    const handleQuestionContext = async () => {
+      if (questionContext && openAIClientRef.current && !isProcessingResponseRef.current) {
+        console.log("Question context changed, sending new message to OpenAI", questionContext);
+        const message = `You are Napoleon Bonaparte, speak like him, act like him. The student asked: "${questionContext.question}". They chose: "${questionContext.wrongAnswer}", but the correct answer was: "${questionContext.correctAnswer}". Please explain why their answer was incorrect and help them understand the correct answer.`;
+        
+        try {
+          isProcessingResponseRef.current = true; // Set processing flag
+          
+          // Send the message using sendUserMessageContent
+          await openAIClientRef.current.sendUserMessageContent([
+            { type: 'input_text', text: message }
+          ]);
+          
+          console.log("Message sent to OpenAI successfully");
+
+          // Start listening for the assistant's response
+          openAIClientRef.current.on(
+            "conversation.updated",
+            handleConversationUpdate
+          );
+
+        } catch (error: any) {
+          console.error("Error sending message to OpenAI:", error);
+          setError(`Failed to send message: ${error.message}`);
+        } finally {
+          isProcessingResponseRef.current = false; // Reset processing flag
+        }
+      }
+    };
+
+    handleQuestionContext();
+  }, [questionContext]);
 
   return (
     <>

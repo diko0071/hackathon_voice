@@ -4,34 +4,34 @@ from typing import TypedDict, Literal, Optional, Annotated
 from rest_framework import serializers
 from .models import Lesson, LessonSection, Quiz, QuizQuestion, QuizQuestionOption
 
-class QueriesListSerializer(TypedDict):
+class QueriesListSerializerOpenAI(TypedDict):
     queries: list[str]
 
-class QuizQuestionOptionSerializer(TypedDict):  
+class QuizQuestionOptionSerializerOpenAI(TypedDict):  
     content: str
     is_correct: bool
 
-class QuizQuestionSerializer(TypedDict):
+class QuizQuestionSerializerOpenAI(TypedDict):
     question: str
     order: int
-    options: List[QuizQuestionOptionSerializer]
+    options: List[QuizQuestionOptionSerializerOpenAI]
 
-class QuizSerializer(TypedDict):
+class QuizSerializerOpenAI(TypedDict):
     title: str
     order: int
-    questions: List[QuizQuestionSerializer]
+    questions: List[QuizQuestionSerializerOpenAI]
 
-class LessonSectionSerializer(TypedDict):
+class LessonSectionSerializerOpenAI(TypedDict):
     title: str
     content: Optional[str]
     order: int
 
-class LessonSerializer(TypedDict):
+class LessonSerializerOpenAI(TypedDict):
     name: str
     avatar_face_id: Optional[str]
     description: Optional[str]
-    sections: List[LessonSectionSerializer]
-    quizzes: List[QuizSerializer]
+    sections: List[LessonSectionSerializerOpenAI]
+    quizzes: List[QuizSerializerOpenAI]
 
 class QuizQuestionOptionSerializer(serializers.ModelSerializer):
     class Meta:

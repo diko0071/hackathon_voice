@@ -1,6 +1,6 @@
 from temporalio import activity
 from lesson.prompts import generate_queries_prompt
-from lesson.serializers import QueriesListSerializer
+from lesson.serializers import QueriesListSerializerOpenAI
 from lesson.services import search_content, openai_call
 
 @activity.defn(name="generate_queries")
@@ -9,7 +9,7 @@ async def generate_queries(title: str, description: str):
     response = await openai_call(
         system_message=generate_queries_prompt, 
         user_message=user_message, 
-        serializer=QueriesListSerializer
+        serializer=QueriesListSerializerOpenAI
     )
     return response["queries"]
 

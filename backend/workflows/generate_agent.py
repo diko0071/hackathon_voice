@@ -2,7 +2,7 @@ from temporalio import activity
 from typing import List, Dict
 from lesson.services import openai_call
 from lesson.prompts import generate_lesson_plan_prompt
-from lesson.serializers import LessonSerializer, QuizSerializer
+from lesson.serializers import LessonSerializer, LessonSerializerOpenAI, QuizSerializerOpenAI
 from lesson.models import Lesson, LessonSection, Quiz, QuizQuestion, QuizQuestionOption
 from asgiref.sync import sync_to_async
 
@@ -17,7 +17,7 @@ async def generate_lesson_content(title: str, topic: str, description: str, avat
     Avatar Face ID: {avatar_face_id}
     """
 
-    response = await openai_call(system_message, user_message, serializer=LessonSerializer)
+    response = await openai_call(system_message, user_message, serializer=LessonSerializerOpenAI)
 
     return response
 
@@ -32,7 +32,7 @@ async def generate_quiz_questions(title: str, topic: str, description: str) -> D
     Description: {description}
     """
 
-    response = await openai_call(system_message, user_message, serializer=QuizSerializer)
+    response = await openai_call(system_message, user_message, serializer=QuizSerializerOpenAI)
 
     return response
 
