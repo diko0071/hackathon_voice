@@ -2,15 +2,16 @@
 
 import ReactMarkdown from 'react-markdown'
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { TeacherAvatar } from './avatar'
-import { LessonSection } from '@/app/types'
+import { Avatar } from './avatar'
+import { Lesson, LessonSection } from '@/app/types'
 
 
 interface ReadMaterialsProps {
+  lesson: Lesson,
   section: LessonSection
 }
 
-export function ReadMaterials({ section }: ReadMaterialsProps) {
+export function ReadMaterials({ lesson, section }: ReadMaterialsProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-8">
       <div className="lg:col-span-3">
@@ -22,7 +23,7 @@ export function ReadMaterials({ section }: ReadMaterialsProps) {
         </ScrollArea>
       </div>
       <div className="lg:col-span-1">
-        <TeacherAvatar lesson={section.content} />
+        <Avatar lesson={lesson} />
       </div>
     </div>
   )

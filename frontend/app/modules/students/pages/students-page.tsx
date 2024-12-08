@@ -80,7 +80,7 @@ export default function StudentWizardFlow({ lectureId }: { lectureId: string }) 
           )}
           <div className="space-y-4">
             {currentStep < lesson.sections.length ? (
-              <ReadMaterials section={lesson.sections[currentStep]} />
+              <ReadMaterials lesson={lesson} section={lesson.sections[currentStep]} />
             ) : (
               <DoQuiz quiz={lesson.quizzes[0]} />
             )}

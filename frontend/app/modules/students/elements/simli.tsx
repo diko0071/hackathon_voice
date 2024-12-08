@@ -27,7 +27,7 @@ const SimliOpenAI: React.FC<SimliOpenAIProps> = ({
 }) => {
   // State management
   const [isLoading, setIsLoading] = useState(false);
-  const [isAvatarVisible, setIsAvatarVisible] = useState(false);
+  const [isAvatarVisible, setIsAvatarVisible] = useState(true);
   const [error, setError] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [userMessage, setUserMessage] = useState("...");
@@ -44,6 +44,11 @@ const SimliOpenAI: React.FC<SimliOpenAIProps> = ({
   // New refs for managing audio chunk delay
   const audioChunkQueueRef = useRef<Int16Array[]>([]);
   const isProcessingChunkRef = useRef(false);
+
+  // Add useEffect to auto-start
+  useEffect(() => {
+    handleStart();
+  }, []); // Empty dependency array means this runs once on mount
 
   /**
    * Initializes the Simli client with the provided configuration.
@@ -338,47 +343,6 @@ const SimliOpenAI: React.FC<SimliOpenAIProps> = ({
     console.log("Audio recording stopped");
   }, []);
 
-  /**
-   * Handles the start of the interaction, initializing clients and starting recording.
-   */
-  const handleStart = useCallback(async () => {
-    setIsLoading(true);
-    setError("");
-    onStart();
-
-    try {
-      console.log("Starting...");
-      initializeSimliClient();
-      await simliClient?.start();
-      eventListenerSimli();
-    } catch (error: any) {
-      console.error("Error starting interaction:", error);
-      setError(`Error starting interaction: ${error.message}`);
-    } finally {
-      setIsAvatarVisible(true);
-      setIsLoading(false);
-    }
-  }, [onStart]);
-
-  /**
-   * Handles stopping the interaction, cleaning up resources and resetting states.
-   */
-  const handleStop = useCallback(() => {
-    console.log("Stopping interaction...");
-    setIsLoading(false);
-    setError("");
-    stopRecording();
-    setIsAvatarVisible(false);
-    simliClient?.close();
-    openAIClientRef.current?.disconnect();
-    if (audioContextRef.current) {
-      audioContextRef.current?.close();
-      audioContextRef.current = null;
-    }
-    stopRecording();
-    onClose();
-    console.log("Interaction stopped");
-  }, [stopRecording]);
 
   /**
    * Simli Event listeners
@@ -404,17 +368,56 @@ const SimliOpenAI: React.FC<SimliOpenAIProps> = ({
     }
   }, []);
 
+  
+  /**
+   * Handles the start of the interaction, initializing clients and starting recording.
+   */
+  const handleStart = useCallback(async () => {
+    setIsLoading(true);
+    setError("");
+    onStart();
+
+    try {
+      console.log("Starting...");
+      initializeSimliClient();
+      await simliClient?.start();
+      eventListenerSimli();
+    } catch (error: any) {
+      console.error("Error starting interaction:", error);
+      setError(`Error starting interaction: ${error.message}`);
+    } finally {
+      setIsAvatarVisible(true);
+      setIsLoading(false);
+    }
+  }, [onStart, initializeSimliClient, eventListenerSimli]);
+
+  /**
+   * Handles stopping the interaction, cleaning up resources and resetting states.
+   */
+  const handleStop = useCallback(() => {
+    console.log("Stopping interaction...");
+    setIsLoading(false);
+    setError("");
+    stopRecording();
+    setIsAvatarVisible(false);
+    simliClient?.close();
+    openAIClientRef.current?.disconnect();
+    if (audioContextRef.current) {
+      audioContextRef.current?.close();
+      audioContextRef.current = null;
+    }
+    stopRecording();
+    onClose();
+    console.log("Interaction stopped");
+  }, [stopRecording]);
+
   return (
-    <>
-      <div
-        className={`transition-all duration-300 ${
-          !isAvatarVisible ? "h-0 overflow-hidden" : "h-auto"
-        }`}
-      >
+    <div className="border border-gray-200 rounded-lg shadow-sm w-[350px]">
+      <div className="w-[350px] h-[350px] overflow-hidden">
         <VideoBox video={videoRef} audio={audioRef} />
       </div>
       <div className="flex flex-col items-center">
-        {!isAvatarVisible ? (
+        {!isRecording ? (
           <button
             onClick={handleStart}
             disabled={isLoading}
@@ -427,7 +430,7 @@ const SimliOpenAI: React.FC<SimliOpenAIProps> = ({
               <IconSparkleLoader className="h-[20px] animate-loader" />
             ) : (
               <span className="font-abc-repro-mono font-bold w-[164px]">
-                Test Interaction
+                Start Interaction
               </span>
             )}
           </button>
@@ -448,7 +451,7 @@ const SimliOpenAI: React.FC<SimliOpenAIProps> = ({
           </>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

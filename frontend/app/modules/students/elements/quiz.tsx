@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { TeacherAvatar } from './avatar'
+import { Avatar } from './avatar'
 import { Quiz } from "@/app/types"
 
 export function DoQuiz({ quiz }: { quiz: Quiz }) {
@@ -38,7 +38,7 @@ export function DoQuiz({ quiz }: { quiz: Quiz }) {
           </div>
         </div>
         <div className="lg:col-span-1">
-          <TeacherAvatar />
+          <Avatar/>
         </div>
       </div>
     )
@@ -84,7 +84,7 @@ export function DoQuiz({ quiz }: { quiz: Quiz }) {
           </div>
         </div>
         <div className="lg:col-span-1">
-          <TeacherAvatar />
+          <Avatar/>
         </div>
       </div>
     )
@@ -110,7 +110,7 @@ export function DoQuiz({ quiz }: { quiz: Quiz }) {
           </div>
         </div>
         <div className="lg:col-span-1">
-          <TeacherAvatar />
+        <Avatar/>
         </div>
       </div>
     )
