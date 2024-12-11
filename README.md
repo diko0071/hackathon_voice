@@ -19,3 +19,5 @@ cd frontend && npm run build && npm run dev
 ```
 - Open localhost:3000 in browser
 
+# Demo Video
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/EH_omK1N1kU/hqdefault.jpg)](https://www.youtube.com/watch?v=EH_omK1N1kU)
